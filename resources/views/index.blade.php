@@ -321,116 +321,181 @@
 
 <!-- MAKE AN APPOINTMENT -->
 <section id="appointment" data-stellar-background-ratio="3">
-     <div class="container" id="appointment">
-          <div class="row">
+    <div class="container">
+        <div class="row">
 
-               <div class="col-md-6 col-sm-6">
-                    <img src="images/appointment-image.jpg" class="img-responsive" alt="">
-               </div>
+            <div class="col-md-6 col-sm-6">
+                <img src="images/appointment-image.jpg" class="img-responsive" alt="">
+            </div>
 
-               <div class="col-md-6 col-sm-6">
-                    <!-- CONTACT FORM HERE -->
-                    <form id="appointment-form" role="form" method="post" action="/appointment" onsubmit="return validation()">
-                         @csrf
-                         <div class="section-title wow fadeInUp" data-wow-delay="0.4s">
-                              <h2>Book an Appointment</h2>
-                         </div>
+            <div class="col-md-6 col-sm-6">
+                <!-- APPOINTMENT FORM -->
+                <form id="appointment-form" method="POST" action="/appointment">
+                    @csrf
 
-                         <div class="wow fadeInUp " data-wow-delay="0.8s">
-                              <div class="col-md-6 col-sm-6">
-                                   <label for="patient_name">Name</label>
-                                   <input type="text" class="form-control" id="patient_name" name="patient_name" placeholder="Full Name">
-                              </div>
+                    <div class="section-title wow fadeInUp" data-wow-delay="0.4s">
+                        <h2>Book an Appointment</h2>
+                    </div>
 
-                              <div class="col-md-6 col-sm-6">
-                                   <label for="patient_email">Email</label>
-                                   <input type="email" class="form-control" id="patient_email" name="patient_email" placeholder="Your Email">
-                              </div>
+                    <div class="wow fadeInUp" data-wow-delay="0.8s">
 
-                              <div class="col-md-6 col-sm-6">
-                                   <label for="appointment_date">Select Date</label>
-                                   <input type="date" name="appointment_date" id="appointment_date" class="form-control">
-                              </div>
+                        <div class="col-md-6 col-sm-6">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="patient_name" required>
+                        </div>
 
-                              <div class="col-md-6 col-sm-6">
-                                   <label for="department">Select Your City</label>
-                                   <select class="form-control" name="city" id="city">
-                                        <option value="" selected disabled>Select City</option>
-                                        @foreach($cities as $city)
-                                        <option value="{{$city->cityname}}">{{$city->cityname}}</option>
-                                        @endforeach
-                                   </select>
-                              </div>
+                        <div class="col-md-6 col-sm-6">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="patient_email" required>
+                        </div>
 
-                              <div class="col-md-12 col-md-12">
-                                   <label for="department">Select Your Doctor</label>
-                                   <!-- changed -->
-                                   <select class="form-control" name="doctor_id" id="doctor_id">
-                                        <option value="" selected disabled>Select Doctor</option>
-                                   </select>
-                                   <script>
-                                        document.getElementById('city').addEventListener('change', function() {
-                                             const cityName = this.value;
-                                             const doctorSelect = document.getElementById('doctor_id');
+                        <div class="col-md-6 col-sm-6">
+                            <label>Select Date</label>
+                            <input type="date" class="form-control" name="appointment_date" required>
+                        </div>
 
-                                             doctorSelect.innerHTML = '<option disabled selected>Loading...</option>';
+                        <div class="col-md-6 col-sm-6">
+                            <label>Select City</label>
+                            <select class="form-control" id="city" required>
+                                <option disabled selected>Select City</option>
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->cityname }}">{{ $city->cityname }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                                             fetch("{{ url('/get-doctors-by-city') }}", {
-                                                       method: "POST",
-                                                       headers: {
-                                                            "Content-Type": "application/json",
-                                                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                                                       },
-                                                       body: JSON.stringify({
-                                                            cname: cityName
-                                                       })
-                                                  })
-                                                  .then(res => res.json())
-                                                  .then(doctors => {
-                                                       doctorSelect.innerHTML = '<option disabled selected>Select Doctor</option>';
+                        <div class="col-md-12">
+                            <label>Select Branch</label>
+                            <select class="form-control" id="branch_id" required>
+                                <option disabled selected>Select Branch</option>
+                            </select>
+                        </div>
 
-                                                       if (doctors.length === 0) {
-                                                            doctorSelect.innerHTML = '<option disabled>No doctors available</option>';
-                                                            return;
-                                                       }
+                        <div class="col-md-12">
+                            <label>Select Doctor</label>
+                            <select class="form-control" name="doctor_id" id="doctor_id" required>
+                                <option disabled selected>Select Doctor</option>
+                            </select>
+                        </div>
 
-                                                       doctors.forEach(doctor => {
-                                                            const option = document.createElement('option');
-                                                            option.value = doctor.id;
-                                                            option.textContent = `${doctor.name}, ${doctor.specialization ?? ''}`;
-                                                            doctorSelect.appendChild(option);
-                                                       });
-                                                  })
-                                                  .catch(() => {
-                                                       doctorSelect.innerHTML = '<option disabled>Error loading doctors</option>';
-                                                  });
-                                        });
-                                   </script>
+                        <div class="col-md-12 col-sm-12">
+                            <label>Phone Number</label>
+                            <input type="tel" class="form-control" name="phone_number" required>
 
+                            <label>Additional Message</label>
+                            <textarea class="form-control" rows="5" name="reason_for_visit"></textarea>
 
+                            <button type="submit" class="form-control" id="cf-submit">
+                                Submit
+                            </button>
+                        </div>
 
+                    </div>
+                </form>
+            </div>
 
-
-
-
-                                   </select>
-                              </div>
-
-                              <div class="col-md-12 col-sm-12">
-                                   <label for="phone_number">Phone Number</label>
-                                   <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Phone">
-                                   <label for="reason_for_visit">Additional Message</label>
-                                   <textarea class="form-control" rows="5" id="reason_for_visit" name="reason_for_visit" placeholder="Message"></textarea>
-                                   <button type="submit" class="form-control" id="cf-submit" name="submit">Submit Button</button>
-                              </div>
-                         </div>
-                    </form>
-
-               </div>
-
-          </div>
-     </div>
+        </div>
+    </div>
 </section>
+
+<!-- JS -->
+<script>
+let userLat = null;
+let userLng = null;
+
+navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+});
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) ** 2;
+
+    return (R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))).toFixed(2);
+}
+
+// City → Branch
+document.getElementById('city').addEventListener('change', function () {
+    const city = this.value;
+    const branchSelect = document.getElementById('branch_id');
+    const doctorSelect = document.getElementById('doctor_id');
+
+    branchSelect.innerHTML = '<option disabled selected>Loading...</option>';
+    doctorSelect.innerHTML = '<option disabled selected>Select Doctor</option>';
+
+    fetch('/get-branches-by-city', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ city })
+    })
+    .then(res => res.json())
+    .then(branches => {
+        branchSelect.innerHTML = '<option disabled selected>Select Branch</option>';
+
+        branches.forEach(branch => {
+            let label = branch.branch_name;
+
+            if (userLat && userLng) {
+                const km = calcDistance(
+                    userLat,
+                    userLng,
+                    branch.latitude,
+                    branch.longitude
+                );
+                label += ` — ${km} km`;
+            }
+
+            const opt = document.createElement('option');
+            opt.value = branch.id;
+            opt.textContent = label;
+            branchSelect.appendChild(opt);
+        });
+    });
+});
+
+// Branch → Doctor
+document.getElementById('branch_id').addEventListener('change', function () {
+    const branch_id = this.value;
+    const doctorSelect = document.getElementById('doctor_id');
+
+    doctorSelect.innerHTML = '<option disabled selected>Loading...</option>';
+
+    fetch('/get-doctors-by-branch', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ branch_id })
+    })
+    .then(res => res.json())
+    .then(doctors => {
+        doctorSelect.innerHTML = '<option disabled selected>Select Doctor</option>';
+
+        if (!doctors.length) {
+            doctorSelect.innerHTML = '<option disabled>No doctors available</option>';
+            return;
+        }
+
+        doctors.forEach(doc => {
+            const opt = document.createElement('option');
+            opt.value = doc.id;
+            opt.textContent = `${doc.name} (${doc.specialization ?? ''})`;
+            doctorSelect.appendChild(opt);
+        });
+    });
+});
+</script>
 <br>
 <br>
 
@@ -448,47 +513,10 @@
 	-->
      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3647.3030413476204!2d100.5641230193719!3d13.757206847615207!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf51ce6427b7918fc!2sG+Tower!5e0!3m2!1sen!2sth!4v1510722015945" width="100%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
 </section>
-<!-- testimonial-->
+
 
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-<script>
-     var submitbtn = document.getElementById('cf-submit')
-     $('#citylist').change(function() {
-
-
-          var parentlist = document.getElementById('doctorlist');
-          var cityname = $(this).val();
-          console.log(cityname)
-          $.ajax({
-               url: "/getdoctors",
-               type: "POST",
-               data: {
-                    "cname": cityname,
-                    "_token": "{{ csrf_token() }}"
-               },
-               success: function(data) {
-                    parentlist.innerHTML = ''; // clear previous options
-
-                    if (data.length == 0) {
-                         var option = document.createElement('option');
-                         option.innerText = 'No doctors found';
-                         parentlist.append(option);
-                         $('#cf-submit').attr('disabled', true);
-
-
-                    } else {
-                         for (i = 0; i < data.length; i++) {
-                              var option = document.createElement('option');
-                              option.innerText = data[i].name;
-                              parentlist.append(option);
-                         }
-                    }
-               }
-
-          })
-     })
-</script>
 
 @endsection

@@ -47,14 +47,15 @@
 }
 </style>
 <div class="container my-4">
-    <h3 class="text-center mb-4">All Doctors</h3>
-
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Success!</strong> {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
+    <h3 class="text-center mb-4">Our Doctors</h3>
+<!-- new -->
+  
+       @if(session('success'))
+           <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+                <strong>✓ Success!</strong> {{ session('success') }}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
     <div class="table-responsive doctor-table-wrapper">
         <table class="table table-striped text-center align-middle">

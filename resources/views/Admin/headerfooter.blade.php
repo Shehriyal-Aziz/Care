@@ -72,16 +72,21 @@
                     </div>
                     <a href="/alldoctors" class="nav-item nav-link"><i class="fa fa-th me-2"></i>CurrentDoctors</a>
 
-                 
 
 
-                   
+
+
+
+                    <a class="nav-link" href="{{ route('admin.cities') }}">
+                        <i class="fas fa-city"></i>
+                        <span>City Management</span>
+                    </a>
                     
-                        <a class="nav-link" href="{{ route('admin.cities') }}">
-                            <i class="fas fa-city"></i> 
-                            <span>City Management</span>
-                        </a>
-                   
+                    <a class="nav-link" href="{{ route('admin.branches') }}">
+                        <i class="fas fa-clinic-medical"></i>
+                        <span>Branch Management</span>
+                    </a>
+
 
 
                     <div class="nav-item dropdown">
@@ -153,17 +158,17 @@
         <!-- Template Javascript -->
         <script src="Admin/js/main.js"></script>
         <script>
-    // Auto-dismiss success alert after 3 seconds
-    document.addEventListener('DOMContentLoaded', function() {
-        const successAlert = document.getElementById('successAlert');
-        if (successAlert) {
-            setTimeout(function() {
-                const bsAlert = new bootstrap.Alert(successAlert);
-                bsAlert.close();
-            }, 3000); // 3000ms = 3 seconds
-        }
-    });
-</script>
+            // Auto-dismiss success alert after 3 seconds
+            document.addEventListener('DOMContentLoaded', function() {
+                const successAlert = document.getElementById('successAlert');
+                if (successAlert) {
+                    setTimeout(function() {
+                        const bsAlert = new bootstrap.Alert(successAlert);
+                        bsAlert.close();
+                    }, 3000); // 3000ms = 3 seconds
+                }
+            });
+        </script>
 </body>
 
 </html>

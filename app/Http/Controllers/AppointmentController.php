@@ -33,6 +33,7 @@ class AppointmentController extends Controller
         $table->phone_number = $request->phone_number;
         $table->reason_for_visit = $request->reason_for_visit;
         $table->city = $request->city;
+        $table->branch_id = $request->branch_id;
         $table->doctor_id = $request->doctor_id;
         $table->status = 'pending'; // Default status
         $table->user_id = Auth::id(); // Assuming the user is authenticated

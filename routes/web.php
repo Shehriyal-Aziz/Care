@@ -8,13 +8,21 @@ use App\Http\Controllers\DoctorController;
 use App\Models\Appointment;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BranchController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\cities;
+use App\Models\Branch;
+
+
+// branch controller
+Route::post('/get-branches-by-city', [BranchController::class, 'getByCity']);
 
 // user controller
 Route::get('/', [UserController::class, 'home']); //will take to home page
-// change
+
 Route::post('/get-doctors-by-city', [UserController::class, ('getdoctorsoncity')]); //When a city is selected, send me all doctors from that city so I can show them in a dropdown.
+// change
+Route::post('/get-doctors-by-branch', [UserController::class, 'getDoctorsByBranch']);
 
 
 // AppointmentController
@@ -49,9 +57,9 @@ Route::middleware([
 
 
     Route::get('/becomeadoctor', function () {
-        $cities = cities::get();
-
-        return view('becomeadoctor', compact('cities'));
+        $cities = cities::all();
+    $branches = Branch::all(); // pass branches
+    return view('becomeadoctor', compact('cities','branches'));
     });
     Route::post('requestfordoctor', [UserController::class, 'requestForDoctor'])->name('requestfordoctor');
     Route::get('/myappointments', [AppointmentController::class, ('myappointments')])->name('myappointments');
@@ -66,6 +74,16 @@ Route::middleware([AdminMiddleware::class])->group(function () {
         $doctors = \App\Models\User::where('role', 'doctor')->get();
         return view('Admin.alldoc', compact('doctors'));
     });
+
+    // new
+   
+    Route::get('/admin/branches/create', [BranchController::class, 'create'])->name('admin.branches');
+Route::post('/admin/branches', [BranchController::class, 'store'])->name('admin.branches.store');
+
+
+    Route::get('/branches', [AdminController::class, 'getBranches'])
+    ->name('admin.branches');
+
 
 
     Route::get('/doctors', [AdminController::class, 'getdoctors']);

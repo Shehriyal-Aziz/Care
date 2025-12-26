@@ -43,7 +43,7 @@
                     <label for="phone">Phone Number</label>
                     <input type="text" class="form-control" id="phone" name="phone" required>
                 </div>
-               
+
                 <div class="form-group">
                     <label for="specialization">Department</label>
                     <select class="form-control" id="specialization" name="specialization" required>
@@ -77,17 +77,18 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <div class="d-flex">
-                        <label for="">Will Take Appoitnments <b>From</b></label>
-                        <input type="time" name="starttime" class="form-control">
-                        <label for="">Till</label>
-                        <input type="time" name="stoptime" class="form-control">
-                    </div>
-
+                <div >
+                    <select class="form-control" name="branch_id" id="branch_id" required>
+                        <option disabled selected>Select Branch</option>
+                        @foreach($branches as $branch)
+                        <option value="{{ $branch->id }}">{{ $branch->branch_name }} ({{ $branch->city }})</option>
+                        @endforeach
+                    </select>
+<br>
+                    
                 </div>
-                <button type="submit" class="btn btn-primary">Submit Application</button>
+                </div>
+                <button  type="submit" class=" form-control btn btn-primary">Submit Application</button>
             </form>
             @endif
 

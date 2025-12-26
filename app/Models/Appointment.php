@@ -16,6 +16,7 @@ class Appointment extends Model
         'reason_for_visit',
         'department',
         'city',
+        'branch_id',
         'doctor_id',
         'status',
         

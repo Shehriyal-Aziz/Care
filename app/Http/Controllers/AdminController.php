@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\cities;
+use App\Models\Branch;
 use App\Models\Appointment;
 
 class AdminController extends Controller
@@ -84,5 +85,13 @@ public function deleteCity($id)
   }
 
 
+// new
 
+
+public function getBranches()
+{
+    $branches = Branch::latest()->get();
+     $cities = cities::get();
+    return view('Admin.branches', compact('branches','cities'));
+}
 }
