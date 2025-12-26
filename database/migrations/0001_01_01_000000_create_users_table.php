@@ -17,6 +17,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('user'); 
+            $table->string('doctorstatus')->default('null'); 
+            $table->string('phone')->default('not provided'); 
+            $table->string('specialization')->default('not provided'); 
+            $table->string('cv')->default('not provided'); 
+            $table->string('city')->default('not provided'); 
+            $table->time('starttime')->nullable()->default(null); 
+            $table->time('stoptime')->nullable()->default(null); 
+            $table->string('experience')->default('not provided');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
