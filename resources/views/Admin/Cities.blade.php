@@ -2,38 +2,38 @@
 @section('content')
 <style>
     .city-management-container {
-        background: linear-gradient(135deg, #1a1a1a 0%, #2d0a0a 100%);
+        background: rgb(243, 244, 246);
         min-height: 100vh;
         padding: 40px 0;
     }
 
     .page-title {
-        color: #fff;
+        color: #2c3e50;
         text-align: center;
         font-size: 2.5rem;
         font-weight: bold;
         margin-bottom: 10px;
-        text-shadow: 0 2px 10px rgba(255, 0, 0, 0.5);
+        text-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
     }
 
     .page-subtitle {
-        color: rgba(255, 255, 255, 0.7);
+        color: #6c757d;
         text-align: center;
         margin-bottom: 40px;
     }
 
     /* Add City Card */
     .add-city-card {
-        background: linear-gradient(145deg, #300000, #400000);
+        background: white;
         border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 10px 40px rgba(255, 0, 0, 0.3);
-        border: 1px solid rgba(255, 0, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(40, 167, 69, 0.15);
+        border: 1px solid rgba(40, 167, 69, 0.2);
         margin-bottom: 40px;
     }
 
     .add-city-card h3 {
-        color: #fff;
+        color: #28a745;
         font-weight: bold;
         margin-bottom: 25px;
         display: flex;
@@ -42,28 +42,29 @@
     }
 
     .add-city-card .form-label {
-        color: rgba(255, 255, 255, 0.9);
+        color: #2c3e50;
         font-weight: 500;
         margin-bottom: 8px;
     }
 
     .add-city-card .form-control {
-        background-color: rgba(255, 255, 255, 0.95);
-        border: 2px solid rgba(255, 0, 0, 0.3);
+        background-color: #f8f9fa;
+        border: 2px solid rgba(40, 167, 69, 0.3);
         border-radius: 10px;
         padding: 12px 15px;
         font-size: 1rem;
         transition: all 0.3s ease;
+        color: #2c3e50;
     }
 
     .add-city-card .form-control:focus {
         background-color: #fff;
-        border-color: #dc3545;
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
     }
 
     .btn-add-city {
-        background: linear-gradient(145deg, #dc3545, #c82333);
+        background: linear-gradient(145deg, #28a745, #218838);
         border: none;
         border-radius: 10px;
         padding: 12px;
@@ -71,31 +72,35 @@
         font-weight: 600;
         color: #fff;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
     }
 
     .btn-add-city:hover {
-        background: linear-gradient(145deg, #c82333, #bd2130);
+        background: linear-gradient(145deg, #218838, #1e7e34);
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
     }
 
     /* Cities List Card */
     .cities-list-card {
-        background: linear-gradient(145deg, #1a1a1a, #2a0000);
+        background: white;
         border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 0, 0, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(40, 167, 69, 0.2);
     }
 
     .cities-list-card h3 {
-        color: #fff;
+        color: #28a745;
         font-weight: bold;
         margin-bottom: 25px;
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    .badge.bg-danger {
+        background-color: #28a745 !important;
     }
 
     .table-responsive {
@@ -105,11 +110,11 @@
 
     .table {
         margin-bottom: 0;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: white;
     }
 
     .table thead {
-        background: linear-gradient(145deg, #dc3545, #c82333);
+        background: linear-gradient(145deg, #28a745, #218838);
     }
 
     .table thead th {
@@ -123,18 +128,18 @@
     }
 
     .table tbody tr {
-        background-color: rgba(26, 26, 26, 0.8);
+        background-color: white;
         transition: all 0.3s ease;
     }
 
     .table tbody tr:hover {
-        background-color: rgba(48, 0, 0, 0.9);
+        background-color: rgba(40, 167, 69, 0.1);
         transform: scale(1.01);
     }
 
     .table td {
-        color: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(146, 2, 2, 0.5);
+        color: #2c3e50;
+        border: 1px solid #dee2e6;
         padding: 15px;
         vertical-align: middle;
     }
@@ -173,7 +178,7 @@
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: rgba(255, 255, 255, 0.6);
+        color: #6c757d;
     }
 
     .empty-state svg {
@@ -181,6 +186,15 @@
         height: 80px;
         margin-bottom: 20px;
         opacity: 0.5;
+        color: #28a745;
+    }
+
+    .empty-state h5 {
+        color: #2c3e50;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
     }
 
     @keyframes slideIn {

@@ -5,6 +5,7 @@ use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\DoctorMiddleware;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\DoctorAvailabilityController;
 use App\Models\Appointment;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
@@ -18,20 +19,19 @@ use App\Models\Branch;
 Route::post('/get-branches-by-city', [BranchController::class, 'getByCity']);
 
 // user controller
-Route::get('/', [UserController::class, 'home']); //will take to home page
+Route::get('/', [UserController::class, 'home'])->name('home'); //will take to home page
 
-Route::post('/get-doctors-by-city', [UserController::class, ('getdoctorsoncity')]); //When a city is selected, send me all doctors from that city so I can show them in a dropdown.
-// change
+Route::post('/get-doctors-by-city', [UserController::class, ('getDoctorByCity')]); //When a city is selected, send me all doctors from that city so I can show them in a dropdown.
+
 Route::post('/get-doctors-by-branch', [UserController::class, 'getDoctorsByBranch']);
 
 
 // AppointmentController
 
 Route::post('/appointment', [AppointmentController::class, 'store'])->middleware('auth:sanctum')->name('appointment.store'); //
-Route::get('/viewallappointments', [AppointmentController::class, 'viewAllAppointments'])->name('view.all.appointments');
 Route::get('/news-details', function () {
     return view('news-detail');
-}); //news page redirect
+}); 
 
 
 
@@ -49,21 +49,20 @@ Route::middleware([
         } else if (Auth::user()->role == 'doctor') {
             return redirect('/DoctorDashboard');
         } else {
-            return view('dashboard');
+            return view('profile.show');
         }
     })->name('dashboard');
 
 
 
 
-    Route::get('/becomeadoctor', function () {
+    Route::get('/applyfordoctor', function () {
         $cities = cities::all();
-    $branches = Branch::all(); // pass branches
-    return view('becomeadoctor', compact('cities','branches'));
+    $branches = Branch::all(); 
+    return view('applyfordoctor', compact('cities','branches'));
     });
     Route::post('requestfordoctor', [UserController::class, 'requestForDoctor'])->name('requestfordoctor');
     Route::get('/myappointments', [AppointmentController::class, ('myappointments')])->name('myappointments');
-    Route::get('/downloadPDF', [AppointmentController::class, ('downloadPDF')])->name('downloadPDF');
 });
 
 
@@ -75,7 +74,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
         return view('Admin.alldoc', compact('doctors'));
     });
 
-    // new
+    
    
     Route::get('/admin/branches/create', [BranchController::class, 'create'])->name('admin.branches');
 Route::post('/admin/branches', [BranchController::class, 'store'])->name('admin.branches.store');
@@ -86,28 +85,51 @@ Route::post('/admin/branches', [BranchController::class, 'store'])->name('admin.
 
 
 
-    Route::get('/doctors', [AdminController::class, 'getdoctors']);
+    Route::get('/requestbydoctors', [AdminController::class, 'getdoctors']);
 
-    Route::post('/doctoraccept/{doctor}/', [AdminController::class, 'doctorAccept'])->name('doctoraccept');
-    Route::post('/doctorreject/{doctor}/', [AdminController::class, 'doctorReject'])->name('doctorreject');
+    Route::post('/doctoraccept/{doctor}/', [AdminController::class, 'Doctor_Request_Accept'])->name('doctoraccept');
+    Route::post('/doctorreject/{doctor}/', [AdminController::class, 'Doctor_Request_Reject'])->name('doctorreject');
 
-    Route::get('/approveddoctors', [AdminController::class, 'approvedDoctors'])->name('approveddoctors');
-    // nwe
+    
     Route::get('/cities', [AdminController::class, 'getCities'])->name('admin.cities');
     Route::post('/addcity', [AdminController::class, 'addcity'])->name('admin.addCity');
     Route::delete('/deleteCity/{city}', [AdminController::class, 'deleteCity'])->name('admin.deleteCity');
 });
 
+// doc avial route by auth middleware
+
+// Doctor Routes - Protected by auth middleware
+Route::middleware(['auth'])->group(function () {
+    
+    // Display doctor profile
+    Route::get('/doctor/profile', [DoctorAvailabilityController::class, 'profile'])->name('doctor.profile');
+    
+    // Update doctor profile
+    Route::post('/doctor/profile/update', [DoctorAvailabilityController::class, 'updateProfile'])->name('doctor.profile.update');
+    
+    // Display availability page
+    Route::get('/doctor/availability', [DoctorAvailabilityController::class, 'index'])->name('doctor.availability');
+    
+    // Store/Update availability (handles multiple days)
+    Route::post('/doctor/availability', [DoctorAvailabilityController::class, 'store'])->name('doctor.availability.store');
+    
+    // Delete specific availability
+    Route::delete('/doctor/availability/{id}', [DoctorAvailabilityController::class, 'destroy'])->name('doctor.availability.destroy');
+    
+    // Compile monthly appointment report
+    Route::post('/doctor/appointments/compile-monthly', [DoctorAvailabilityController::class, 'compileMonthlyReport']);
+    
+});
 //Doctor Middleware Routes
 Route::middleware([DoctorMiddleware::class])->group(function () {
+
+
     Route::get('/DoctorDashboard', [DoctorController::class, 'appointmentRequest']);
-    Route::post('/doctor/availability', [DoctorController::class, 'store']);
+
+    
+    Route::get('doctor/appointments', [DoctorController::class, 'patients']);
 
 
-
-
-    Route::get('/doctor/profile', [DoctorController::class, 'profile'])->name('doctor.profile');
-    Route::post('/doctor/profile', [DoctorController::class, 'updateProfile'])->name('doctor.profile.update');
     Route::post('/appointment/accept/{appointment}', [DoctorController::class, 'acceptAppointment'])->name('appointment.accept');
     Route::post('/appointment/reject/{appointment}', [DoctorController::class, 'rejectAppointment'])->name('appointment.reject');
 });

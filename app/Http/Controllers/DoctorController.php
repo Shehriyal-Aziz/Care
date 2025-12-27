@@ -6,38 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\Appointment;
 use App\Models\DoctorAvailability;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 
 class DoctorController extends Controller
 {
-      public function store(Request $request)
-    {
-        $request->validate([
-            'day_of_week' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
-        ]);
-
-        DoctorAvailability::updateOrCreate(
-            [
-                'doctor_id' => auth()->id(),
-                'day_of_week' => $request->day_of_week,
-            ],
-            [
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'is_available' => $request->has('is_available'),
-            ]
-        );
-
-        return redirect()->back()->with('success', 'Availability updated!');
-    }
+   
     public function appointmentRequest()
     {
         $appointments = Appointment::where('doctor_id', Auth::user()->id)->get();
         $availabilities = DoctorAvailability::where('doctor_id', Auth::user()->id)->get();
-        return view('Doctor.appointmentRequest', compact('appointments', 'availabilities'));
+        return view('Doctor.DoctorDashboard', compact('appointments', 'availabilities'));
+    }
+    public function patients()
+    {
+        $appointments = Appointment::where('doctor_id', Auth::user()->id)->get();
+        return view('Doctor.appointments', compact('appointments',));
     }
     public function profile()
     {

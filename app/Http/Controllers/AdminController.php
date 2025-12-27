@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\cities;
 use App\Models\Branch;
-use App\Models\Appointment;
 
 class AdminController extends Controller
 {
@@ -38,9 +37,9 @@ public function addcity(Request $request)
     return redirect()->route('admin.cities')->with('success', 'City "' . $request->cityname . '" has been added successfully!');
 }
 
-/**
- * Delete a city
- */
+
+ // Delete a city
+ 
 public function deleteCity($id)
 {
     $city = cities::findOrFail($id);
@@ -60,7 +59,7 @@ public function deleteCity($id)
         $doctors = User::where('role', 'Requested to become a doctor')->get();
         return view('Admin.doctors', compact('doctors'));
     }
-  public function doctorAccept($doctor)
+  public function Doctor_Request_Accept($doctor)
   {
      $doc = User::find($doctor);
      $doc->doctorstatus = 'accepted';
@@ -69,7 +68,7 @@ public function deleteCity($id)
 
      return redirect()->back()->with('success', 'Doctor request accepted successfully.');
   }
-  public function doctorReject($doctor)
+  public function Doctor_Request_Reject($doctor)
   {
      $doc = User::find($doctor);
      $doc->doctorstatus = 'rejected';
@@ -78,14 +77,9 @@ public function deleteCity($id)
 
      return redirect()->back()->with('success', 'Doctor request rejected successfully.');
   }
-  public function approvedDoctors()
-  {
-    $doctors = User::where('role', 'doctor')->get();
-    return view('Admin.approveddoctors', compact('doctors'));
-  }
+ 
 
 
-// new
 
 
 public function getBranches()

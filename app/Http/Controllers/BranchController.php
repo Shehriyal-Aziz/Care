@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Branch; 
+use App\Models\cities; 
+
 
 
 class BranchController extends Controller
@@ -16,9 +18,9 @@ class BranchController extends Controller
     
  public function create()
     {
-        return view('admin.branches');
+        $cities = cities::get();
+        return view('admin.branches', compact('cities'));
     }
-
     public function store(Request $request)
     {
         $request->validate([

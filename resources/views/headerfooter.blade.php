@@ -3,31 +3,7 @@
 
 <head>
 
-     <title>CareGroup</title>
-     <style>
-          .becomeadoctor{
-               height:50px;
-               width:auto;
-               background-color: #a5c422;
-               color:white;
-              z-index: 1000;
-               position:fixed;
-               bottom:20px;
-               right:20px
-          }
-          .becomeadoctor a{
-               color:white;
-               text-decoration: none;
-               font-size: 20px;
-               padding: 10px 20px;
-               position:relative;
-               top:10px
-          }
-          
-     </style>
-     
-
-
+     <title>Care</title>
      <meta charset="UTF-8">
      <meta http-equiv="X-UA-Compatible" content="IE=Edge">
      <meta name="description" content="">
@@ -81,7 +57,7 @@
                     <div class="col-md-8 col-sm-7 text-align-right">
                          <span class="phone-icon"><i class="fa fa-phone"></i> 010-060-0160</span>
                          <span class="date-icon"><i class="fa fa-calendar-plus-o"></i> 6:00 AM - 10:00 PM (Mon-Fri)</span>
-                         <span class="email-icon"><i class="fa fa-envelope-o"></i> <a href="#">CareGroup@company.com</a></span>
+                         <span class="email-icon"><i class="fa fa-envelope-o"></i> <a href="#">Care@company.com</a></span>
                     </div>
 
                </div>
@@ -90,13 +66,7 @@
 
 
      <!-- MENU -->
-      @auth
-    @if(Auth::user()->role === 'user')
-        <div class="becomeadoctor">
-            <a href="/becomeadoctor">Become a Doctor</a>
-        </div>
-    @endif
-@endauth
+    
      <section class="navbar navbar-default navbar-static-top" role="navigation">
           <div class="container">
 
@@ -115,7 +85,7 @@
                               <i class="fas fa-heart"></i>
                          </div>
                          <div class="logo-text">
-                              <strong>Care</strong><span class="grouplogo">Group</span>
+                              <strong>Care</strong>
                          </div>
                     </a>
                </div>

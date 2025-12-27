@@ -18,8 +18,7 @@ class UserController extends Controller
         $branches = Branch::get();
 
         return view('index', compact('cities', 'doctors', 'branches'));
-    }
-   // UserController.php
+    }   
 public function getDoctorsByBranch(Request $request)
 {
     $branch_id = $request->input('branch_id');
@@ -29,10 +28,6 @@ public function getDoctorsByBranch(Request $request)
                     ->get();
     return response()->json($doctors);
 }
-
-
-
-
    public function requestForDoctor(Request $request)
 {
     $user = auth()->user();
@@ -56,8 +51,7 @@ public function getDoctorsByBranch(Request $request)
 
     return redirect()->back()->with('success', 'Your request to become a doctor has been submitted successfully.');
 }
-
-    public function getdoctorsoncity(Request $req)
+    public function getDoctorByCity(Request $req)
     {
         // When a city is selected, send me all doctors from that city so I can show them in a dropdown.
         $cityname = $req->input('cname');

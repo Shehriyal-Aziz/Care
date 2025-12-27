@@ -40,6 +40,12 @@ body{ background:var(--bg); }
     background:linear-gradient(135deg,var(--dark),var(--primary));
     color:#fff;
     font-size:1.2rem;
+    cursor:pointer;
+    transition:transform 0.2s;
+}
+
+.edit-btn:hover{
+    transform:scale(1.1);
 }
 
 /* HEADER */
@@ -136,21 +142,54 @@ body{ background:var(--bg); }
     gap:10px;
 }
 .day{
-    padding:12px 0;
+    padding:16px 8px;
     border-radius:12px;
     text-align:center;
     font-weight:700;
-    background:#ECFEFF;
-    color:var(--primary);
     font-size:.9rem;
+    transition:transform 0.2s, box-shadow 0.2s;
+    cursor:pointer;
+    position:relative;
 }
-.available{
-    background:linear-gradient(135deg,#0FB9B1,#38BDF8);
+
+.day:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+
+.day-name{
+    display:block;
+    font-size:0.75rem;
+    opacity:0.9;
+    margin-bottom:4px;
+}
+
+.day-time{
+    display:block;
+    font-size:0.7rem;
+    margin-top:4px;
+    opacity:0.85;
+}
+
+/* Default state - no availability set */
+.day.not-set{
+    background:#F1F5F9;
+    color:#64748B;
+    border:2px dashed #CBD5E1;
+}
+
+/* Available */
+.day.available{
+    background:linear-gradient(135deg,#10B981,#059669);
     color:#fff;
+    border:2px solid #10B981;
 }
-.unavailable{
-    background:#FEE2E2;
-    color:#991B1B;
+
+/* Unavailable */
+.day.unavailable{
+    background:linear-gradient(135deg,#EF4444,#DC2626);
+    color:#fff;
+    border:2px solid #EF4444;
 }
 
 /* MODAL */
@@ -180,6 +219,7 @@ body{ background:var(--bg); }
     border:none;
     font-size:2rem;
     color:var(--primary);
+    cursor:pointer;
 }
 
 /* FORM */
@@ -198,6 +238,12 @@ input{
     padding:14px;
     border-radius:18px;
     font-weight:700;
+    cursor:pointer;
+    transition:transform 0.2s;
+}
+
+.save:hover{
+    transform:translateY(-2px);
 }
 
 /* =========================
@@ -241,6 +287,10 @@ input{
 
     .calendar{
         grid-template-columns:repeat(4,1fr);
+    }
+
+    .day-time{
+        font-size:0.65rem;
     }
 }
 </style>
@@ -287,13 +337,43 @@ input{
 <div class="section">
 <h3>Weekly Availability</h3>
 <div class="calendar">
-<div class="day available">Mon</div>
-<div class="day available">Tue</div>
-<div class="day unavailable">Wed</div>
-<div class="day available">Thu</div>
-<div class="day available">Fri</div>
-<div class="day unavailable">Sat</div>
-<div class="day unavailable">Sun</div>
+@php
+    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    $dayShort = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    
+    // Create availability lookup array
+    $availabilityMap = [];
+    foreach($availabilities as $avail) {
+        $availabilityMap[$avail->day_of_week] = $avail;
+    }
+@endphp
+
+@foreach($days as $index => $day)
+    @php
+        $availability = $availabilityMap[$day] ?? null;
+        
+        if ($availability) {
+            $class = $availability->is_available ? 'available' : 'unavailable';
+            $startTime = \Carbon\Carbon::parse($availability->start_time)->format('h:i A');
+            $endTime = \Carbon\Carbon::parse($availability->end_time)->format('h:i A');
+            $timeRange = $startTime . ' - ' . $endTime;
+        } else {
+            $class = 'not-set';
+            $timeRange = 'Not Set';
+        }
+    @endphp
+    
+    <div class="day {{ $class }}" title="{{ $day }}: {{ $timeRange }}">
+        <span class="day-name">{{ $dayShort[$index] }}</span>
+        @if($availability)
+            <i class="fa {{ $availability->is_available ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+            <span class="day-time">{{ $timeRange }}</span>
+        @else
+            <i class="fa fa-question-circle"></i>
+            <span class="day-time">{{ $timeRange }}</span>
+        @endif
+    </div>
+@endforeach
 </div>
 </div>
 
@@ -308,11 +388,11 @@ input{
 <h3>Edit Profile</h3>
 <form method="POST" action="{{ route('doctor.profile.update') }}">
 @csrf
-<input name="name" value="{{ $doctor->name }}">
-<input name="email" value="{{ $doctor->email }}">
-<input name="phone" value="{{ $doctor->phone }}">
-<input name="specialization" value="{{ $doctor->specialization }}">
-<input name="experience" value="{{ $doctor->experience }}">
+<input name="name" value="{{ $doctor->name }}" placeholder="Full Name">
+<input name="email" value="{{ $doctor->email }}" placeholder="Email">
+<input name="phone" value="{{ $doctor->phone }}" placeholder="Phone Number">
+<input name="specialization" value="{{ $doctor->specialization }}" placeholder="Specialization">
+<input name="experience" value="{{ $doctor->experience }}" placeholder="Years of Experience">
 <button class="save">Save Changes</button>
 </form>
 </div>
@@ -325,6 +405,13 @@ function openModal(){
 function closeModal(){
     document.getElementById('modal').style.display='none';
 }
+
+// Close modal on outside click
+document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
